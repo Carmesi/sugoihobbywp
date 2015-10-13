@@ -34,6 +34,10 @@ if (!function_exists('bootstrapBasicSetup')) {
 		// enable support for post thumbnail or feature image on posts and pages
 		add_theme_support('post-thumbnails');
 
+		// allow the use of html5 markup
+		// @link https://codex.wordpress.org/Theme_Markup
+		add_theme_support('html5', array('caption', 'comment-form', 'comment-list', 'gallery', 'search-form'));
+
 		// add support menu
 		register_nav_menus(array(
 			'primary' => __('Primary Menu', 'bootstrap-basic'),
@@ -137,12 +141,23 @@ if (!function_exists('bootstrapBasicEnqueueScripts')) {
 		wp_enqueue_script('respond-script', get_template_directory_uri() . '/js/vendor/respond.min.js');
 		wp_enqueue_script('html5-shiv-script', get_template_directory_uri() . '/js/vendor/html5shiv.js');
 		wp_enqueue_script('jquery');
-		wp_enqueue_script('bootstrap-script', get_template_directory_uri() . '/js/vendor/bootstrap.min.js');
-		wp_enqueue_script('main-script', get_template_directory_uri() . '/js/main.js');
+		wp_enqueue_script('bootstrap-script', get_template_directory_uri() . '/js/vendor/bootstrap.min.js', array(), false, true);
+		wp_enqueue_script('main-script', get_template_directory_uri() . '/js/main.js', array(), false, true);
 		wp_enqueue_style('bootstrap-basic-style', get_stylesheet_uri());
 	}// bootstrapBasicEnqueueScripts
 }
 add_action('wp_enqueue_scripts', 'bootstrapBasicEnqueueScripts');
+
+
+/**
+ * admin page displaying help.
+ */
+if (is_admin()) {
+	require get_template_directory() . '/inc/BootstrapBasicAdminHelp.php';
+	$bbsc_adminhelp = new BootstrapBasicAdminHelp();
+	add_action('admin_menu', array($bbsc_adminhelp, 'themeHelpMenu'));
+	unset($bbsc_adminhelp);
+}
 
 
 /**
